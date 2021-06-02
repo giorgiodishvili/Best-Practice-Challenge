@@ -1,4 +1,5 @@
 package com.android.bestpracticechallenge.ui.adapters
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,6 +33,7 @@ class NewsRecyclerViewAdapter(
 
     init {
         screenHeight = Tools.getScreenDimenss().y
+
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -39,8 +41,8 @@ class NewsRecyclerViewAdapter(
                 totalItemCount = linearLayoutManager.itemCount
                 lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition()
                 if (!isLoading && totalItemCount <= lastVisibleItem + visibleThreshold) {
-                    if (onLoadMoreListener != null)
-                        onLoadMoreListener!!.onLoadMore()
+                    if (onLoadMoreListener != null && news.isNotEmpty())
+                        onLoadMoreListener!!.onLoadMore(news[news.size - 1])
                     isLoading = true
                 }
             }
@@ -61,7 +63,8 @@ class NewsRecyclerViewAdapter(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
-                ))
+                )
+            )
         }
     }
 
@@ -71,7 +74,8 @@ class NewsRecyclerViewAdapter(
         }
     }
 
-    inner class WallPostsViewHolder(private val binding: ItemNewsRecyclerviewLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class WallPostsViewHolder(private val binding: ItemNewsRecyclerviewLayoutBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         private lateinit var model: NewsModel
 
         fun onBind() {
@@ -82,44 +86,36 @@ class NewsRecyclerViewAdapter(
         }
     }
 
-    inner class LoadMorePostsViewHolder(binding: ItemRecyclerviewLoadMoreLayoutBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class LoadMorePostsViewHolder(binding: ItemRecyclerviewLoadMoreLayoutBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     fun setOnLoadMoreListener(mOnLoadMoreListener: OnLoadMoreListener) {
         this.onLoadMoreListener = mOnLoadMoreListener
     }
 
-    fun setLoaded() {
-        isLoading = false
-    }
-
     override fun getItemViewType(position: Int): Int {
-        return when {
-            news[position].isLast -> VIEW_TYPE_LOADING
+        return when (position) {
+            news.size -> VIEW_TYPE_LOADING
             else -> VIEW_TYPE_WALL_ITEM
         }
     }
 
     override fun getItemCount(): Int {
-        return news.size
+        return news.size + 1
     }
 
-    fun setData(list: MutableList<NewsModel>) {
-        this.news.clear()
-        this.news.addAll(list)
-        notifyDataSetChanged()
-    }
-    fun clearData(){
-        this.news.clear()
-        notifyDataSetChanged()
-    }
-
-    fun addToList(item: NewsModel){
-        news.add(item)
-        notifyItemInserted(news.size)
-    }
-
-    fun removeLastItem(){
-        news.removeAt(news.size - 1)
-        notifyItemRemoved(news.size)
+    fun addData(list: MutableList<NewsModel>) {
+        val lastPosition = news.size
+        isLoading = false
+        if (news.isNotEmpty() && news.size != 1) {
+            news.addAll(list)
+            notifyItemMoved(
+                lastPosition,
+                news.size - 1
+            )
+        } else {
+            news.addAll(list)
+            notifyDataSetChanged()
+        }
     }
 }

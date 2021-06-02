@@ -1,11 +1,9 @@
 package com.android.bestpracticechallenge.ui.fragments
 
-import android.opengl.Visibility
 import android.os.Bundle
-import android.util.Log.d
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
+import android.view.View.*
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,10 +12,7 @@ import com.android.bestpracticechallenge.bean.NewsModel
 import com.android.bestpracticechallenge.databinding.NewsFragmentBinding
 import com.android.bestpracticechallenge.ui.adapters.NewsRecyclerViewAdapter
 import com.android.bestpracticechallenge.ui.interfaces.OnLoadMoreListener
-import com.android.bestpracticechallenge.ui.tools.Tools
 import com.android.bestpracticechallenge.ui.viewmodels.NewsViewModel
-import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineScope
 
 
 class NewsFragment : Fragment() {
@@ -25,7 +20,7 @@ class NewsFragment : Fragment() {
     private val viewModel: NewsViewModel by viewModels()
     private lateinit var binding: NewsFragmentBinding
     private lateinit var adapter: NewsRecyclerViewAdapter
-    private var value: MutableList<NewsModel> = mutableListOf()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,7 +39,8 @@ class NewsFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        binding.newsRecyclerView.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL, false)
+        binding.newsRecyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         adapter = NewsRecyclerViewAdapter(binding.newsRecyclerView)
         binding.newsRecyclerView.adapter = adapter
         adapter.setOnLoadMoreListener(loadMoreListener)
@@ -53,40 +49,23 @@ class NewsFragment : Fragment() {
 
     private val loadMoreListener = object :
         OnLoadMoreListener {
-        override fun onLoadMore() {
-            if (value.isNotEmpty()) {
-                if (!value[value.size - 1].isLast) {
-                    binding.newsRecyclerView.post {
-                        val newsModel = NewsModel()
-                        newsModel.isLast = true
-                        value.add(newsModel)
-                        adapter.addToList(newsModel)
-                        viewModel.init()
-                    }
+        override fun onLoadMore(newsModel: NewsModel) {
+            if (!newsModel.isLast) {
+                binding.newsRecyclerView.post {
+                    viewModel.init()
                 }
             }
         }
     }
+
     private fun observer() {
-        viewModel._downloadLiveData.observe(viewLifecycleOwner, {
-            Tools.viewVisibility(binding.progressBar)
-        })
-
         viewModel._fetchedNewsLiveData.observe(viewLifecycleOwner, {
-            val lastPosition = value.size
-            if (lastPosition > 0) {
-                value.removeAt(value.size - 1)
-                adapter.notifyItemRemoved(value.size - 1)
-            }
-            adapter.setLoaded()
-            value.addAll(it.toMutableList())
-            if (value.isNotEmpty() && value.size != 1) adapter.notifyItemMoved(
-                lastPosition,
-                value.size - 1
-            )
-            else adapter.notifyDataSetChanged()
+            adapter.addData(it.toMutableList())
 
-            adapter.setData(value)
+            if (binding.newsRecyclerView.visibility == INVISIBLE) {
+                binding.newsRecyclerView.visibility = VISIBLE
+                binding.progressBar.visibility = GONE
+            }
         })
     }
 

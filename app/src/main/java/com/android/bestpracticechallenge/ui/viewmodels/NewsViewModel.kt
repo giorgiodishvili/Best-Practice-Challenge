@@ -21,11 +21,6 @@ class NewsViewModel : ViewModel() {
 
     val _fetchedNewsLiveData: LiveData<List<NewsModel>> = fetchedNews
 
-    private var downloadingLiveData = MutableLiveData<Boolean>()
-
-    val _downloadLiveData: LiveData<Boolean> = downloadingLiveData
-
-
     fun init() {
         CoroutineScope(Dispatchers.IO).launch {
             populateList()
@@ -33,21 +28,17 @@ class NewsViewModel : ViewModel() {
     }
 
     private suspend fun populateList() {
-
-        downloadingLiveData.postValue(true)
         lateinit var result: Response<List<NewsModel>>
 
         if (Tools.isInternetAvailable()) {
             result = RetrofitService.retrofit().getRequest(ApiMethod.news)
             if (result.isSuccessful) {
                 fetchedNews.postValue(result.body() as MutableList<NewsModel>)
-            }else{
+            } else {
                 MyErrorHandler.handleResponseCode(result)
             }
-        }else {
+        } else {
             MyErrorHandler.handleError("No Internet")
         }
-        downloadingLiveData.postValue(false)
-
     }
 }

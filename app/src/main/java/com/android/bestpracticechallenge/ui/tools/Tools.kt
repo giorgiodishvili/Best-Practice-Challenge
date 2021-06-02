@@ -9,7 +9,6 @@ import android.os.Build
 import android.util.DisplayMetrics
 import android.view.View
 import com.android.bestpracticechallenge.App
-import com.android.bestpracticechallenge.App.Companion.context
 
 
 object Tools {
