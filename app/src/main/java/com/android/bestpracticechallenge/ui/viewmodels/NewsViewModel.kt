@@ -36,6 +36,7 @@ class NewsViewModel : ViewModel() {
 
         downloadingLiveData.postValue(true)
         lateinit var result: Response<List<NewsModel>>
+
         if (Tools.isInternetAvailable()) {
             result = RetrofitService.retrofit().getRequest(ApiMethod.news)
             if (result.isSuccessful) {

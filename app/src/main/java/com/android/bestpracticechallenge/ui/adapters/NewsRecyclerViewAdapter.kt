@@ -110,5 +110,16 @@ class NewsRecyclerViewAdapter(
     }
     fun clearData(){
         this.news.clear()
+        notifyDataSetChanged()
+    }
+
+    fun addToList(item: NewsModel){
+        news.add(item)
+        notifyItemInserted(news.size)
+    }
+
+    fun removeLastItem(){
+        news.removeAt(news.size - 1)
+        notifyItemRemoved(news.size)
     }
 }
