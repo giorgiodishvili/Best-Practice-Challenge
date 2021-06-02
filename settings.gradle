@@ -1,0 +1,2 @@
+rootProject.name = "Best Practice Challenge"
+include ':app'
