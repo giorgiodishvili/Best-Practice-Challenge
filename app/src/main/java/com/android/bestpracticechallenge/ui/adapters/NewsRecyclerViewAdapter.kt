@@ -42,7 +42,7 @@ class NewsRecyclerViewAdapter(
                 lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition()
                 if (!isLoading && totalItemCount <= lastVisibleItem + visibleThreshold) {
                     if (onLoadMoreListener != null && news.isNotEmpty())
-                        onLoadMoreListener!!.onLoadMore(news[news.size - 1])
+                        onLoadMoreListener!!.onLoadMore(news[news.size - 1],news.size)
                     isLoading = true
                 }
             }

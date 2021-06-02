@@ -49,11 +49,13 @@ class NewsFragment : Fragment() {
 
     private val loadMoreListener = object :
         OnLoadMoreListener {
-        override fun onLoadMore(newsModel: NewsModel) {
+        override fun onLoadMore(newsModel: NewsModel, nextElementIndex: Int) {
             if (!newsModel.isLast) {
                 binding.newsRecyclerView.post {
                     viewModel.init()
                 }
+            }else {
+                binding.newsRecyclerView.findViewHolderForAdapterPosition(nextElementIndex)!!.itemView.visibility=GONE
             }
         }
     }
