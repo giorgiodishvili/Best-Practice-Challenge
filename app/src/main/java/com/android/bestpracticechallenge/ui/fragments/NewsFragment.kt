@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.bestpracticechallenge.bean.NewsModel
 import com.android.bestpracticechallenge.databinding.NewsFragmentBinding
+import com.android.bestpracticechallenge.ui.ApiResult
 import com.android.bestpracticechallenge.ui.adapters.NewsRecyclerViewAdapter
 import com.android.bestpracticechallenge.ui.interfaces.OnLoadMoreListener
 import com.android.bestpracticechallenge.ui.viewmodels.NewsViewModel
@@ -62,11 +63,21 @@ class NewsFragment : Fragment() {
 
     private fun observer() {
         viewModel._fetchedNewsLiveData.observe(viewLifecycleOwner, {
-            adapter.addData(it.toMutableList())
-
             if (binding.newsRecyclerView.visibility == INVISIBLE) {
                 binding.newsRecyclerView.visibility = VISIBLE
                 binding.progressBar.visibility = GONE
+            }
+
+            when(it.state){
+                ApiResult.State.SUCCESS->{
+                    adapter.addData(it.data as MutableList<NewsModel>)
+                }
+                ApiResult.State.ERROR->{
+                    //TODO handle error
+                }
+                ApiResult.State.LOADING->{
+
+                }
             }
         })
     }
