@@ -6,8 +6,6 @@ import retrofit2.Response
 object MyErrorHandler {
 
 
-    private const val HTTP_200_OK = 200
-    private const val HTTP_201_CREATED = 201
     private const val HTTP_400_BAD_REQUEST = 400
     private const val HTTP_401_UNAUTHORIZED = 401
     private const val HTTP_404_NOT_FOUND = 404

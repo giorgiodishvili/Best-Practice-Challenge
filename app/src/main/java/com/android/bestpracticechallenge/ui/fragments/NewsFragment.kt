@@ -3,6 +3,8 @@ package com.android.bestpracticechallenge.ui.fragments
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -40,9 +42,11 @@ class NewsFragment : Fragment() {
     }
 
     private fun fetchNews() {
+        binding.progressBar.visibility = VISIBLE
         viewModel.fetchNews().observe(viewLifecycleOwner, {
             lifecycleScope.launch {
                 adapter.submitData(it)
+                binding.progressBar.visibility = GONE
             }
         })
     }
@@ -52,7 +56,8 @@ class NewsFragment : Fragment() {
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         adapter = NewsRecyclerViewAdapter()
         binding.newsRecyclerView.adapter = adapter
-
     }
+
+
 }
 

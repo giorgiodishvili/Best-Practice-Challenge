@@ -3,4 +3,5 @@
     <string name="incorrect_request">Incorrect request</string>
     <string name="an_error_occurred_please_try_again">An error occurred, please try again.</string>
     <string name="no_internet">No Internet</string>
+    <string name="title">Title</string>
 </resources>

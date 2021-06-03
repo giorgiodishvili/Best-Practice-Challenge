@@ -16,7 +16,6 @@ class NewsRepo {
     }
 
     fun getNews(): LiveData<PagingData<NewsModel>> {
-        Log.d("PixaBayRepository", "New page")
         return Pager(
             config = PagingConfig(
                 pageSize = NETWORK_PAGE_SIZE,

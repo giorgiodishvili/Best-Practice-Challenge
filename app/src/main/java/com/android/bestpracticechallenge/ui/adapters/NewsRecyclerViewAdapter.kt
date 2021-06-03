@@ -36,7 +36,6 @@ class NewsRecyclerViewAdapter() : PagingDataAdapter<NewsModel,RecyclerView.ViewH
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as? WallPostsViewHolder)?.onBind()
-
     }
 
     inner class WallPostsViewHolder(private val binding: ItemNewsRecyclerviewLayoutBinding) :

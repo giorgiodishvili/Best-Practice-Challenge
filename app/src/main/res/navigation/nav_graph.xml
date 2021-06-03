@@ -10,4 +10,5 @@
         android:name="com.android.bestpracticechallenge.ui.fragments.NewsFragment"
         android:label="news_fragment"
         tools:layout="@layout/news_fragment" />
+
 </navigation>

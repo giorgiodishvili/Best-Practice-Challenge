@@ -1,6 +1,5 @@
 package com.android.bestpracticechallenge.ui
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.android.bestpracticechallenge.bean.NewsModel
