@@ -3,17 +3,18 @@ package com.android.bestpracticechallenge.ui.fragments
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.*
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.bestpracticechallenge.bean.NewsModel
 import com.android.bestpracticechallenge.databinding.NewsFragmentBinding
-import com.android.bestpracticechallenge.ui.ApiResult
 import com.android.bestpracticechallenge.ui.adapters.NewsRecyclerViewAdapter
-import com.android.bestpracticechallenge.ui.interfaces.OnLoadMoreListener
 import com.android.bestpracticechallenge.ui.viewmodels.NewsViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 
 
 class NewsFragment : Fragment() {
@@ -35,52 +36,23 @@ class NewsFragment : Fragment() {
 
     private fun init() {
         initRecyclerView()
-        viewModel.init()
-        observer()
+        fetchNews()
+    }
+
+    private fun fetchNews() {
+        viewModel.fetchNews().observe(viewLifecycleOwner, {
+            lifecycleScope.launch {
+                adapter.submitData(it)
+            }
+        })
     }
 
     private fun initRecyclerView() {
         binding.newsRecyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        adapter = NewsRecyclerViewAdapter(binding.newsRecyclerView)
+        adapter = NewsRecyclerViewAdapter()
         binding.newsRecyclerView.adapter = adapter
-        adapter.setOnLoadMoreListener(loadMoreListener)
 
     }
-
-    private val loadMoreListener = object :
-        OnLoadMoreListener {
-        override fun onLoadMore(newsModel: NewsModel, nextElementIndex: Int) {
-            if (!newsModel.isLast) {
-                binding.newsRecyclerView.post {
-                    viewModel.init()
-                }
-            }else {
-                binding.newsRecyclerView.findViewHolderForAdapterPosition(nextElementIndex)!!.itemView.visibility=GONE
-            }
-        }
-    }
-
-    private fun observer() {
-        viewModel._fetchedNewsLiveData.observe(viewLifecycleOwner, {
-            if (binding.newsRecyclerView.visibility == INVISIBLE) {
-                binding.newsRecyclerView.visibility = VISIBLE
-                binding.progressBar.visibility = GONE
-            }
-
-            when(it.state){
-                ApiResult.State.SUCCESS->{
-                    adapter.addData(it.data as MutableList<NewsModel>)
-                }
-                ApiResult.State.ERROR->{
-                    //TODO handle error
-                }
-                ApiResult.State.LOADING->{
-
-                }
-            }
-        })
-    }
-
 }
 
