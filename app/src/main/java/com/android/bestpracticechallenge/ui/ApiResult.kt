@@ -1,13 +1,17 @@
 package com.android.bestpracticechallenge.ui
 
-import com.android.bestpracticechallenge.bean.NewsModel
-
-data class ApiResult<T>(val state: State, val data: T? = null, val message: String? =null, val loading: Boolean =false){
-    enum class State{
+data class ApiResult<T>(
+    val state: State,
+    val data: T? = null,
+    val message: String? = null,
+    val loading: Boolean = false
+) {
+    enum class State {
         SUCCESS,
         ERROR,
         LOADING
     }
+
     companion object {
         fun <T> success(item: T): ApiResult<T> {
             return ApiResult(State.SUCCESS, item)
@@ -18,7 +22,7 @@ data class ApiResult<T>(val state: State, val data: T? = null, val message: Stri
         }
 
         fun <T> loading(flag: Boolean): ApiResult<T> {
-            return ApiResult(State.LOADING,null,null,flag)
+            return ApiResult(State.LOADING, null, null, flag)
         }
     }
 }

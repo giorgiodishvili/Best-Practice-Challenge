@@ -11,7 +11,8 @@ import com.android.bestpracticechallenge.databinding.ItemNewsRecyclerviewLayoutB
 import com.bumptech.glide.Glide
 
 
-class NewsRecyclerViewAdapter() : PagingDataAdapter<NewsModel,RecyclerView.ViewHolder>(REPO_COMPARATOR) {
+class NewsRecyclerViewAdapter() :
+    PagingDataAdapter<NewsModel, RecyclerView.ViewHolder>(REPO_COMPARATOR) {
 
 
     companion object {
@@ -26,11 +27,11 @@ class NewsRecyclerViewAdapter() : PagingDataAdapter<NewsModel,RecyclerView.ViewH
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return WallPostsViewHolder(
-                ItemNewsRecyclerviewLayoutBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
+            ItemNewsRecyclerviewLayoutBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         )
     }
 
@@ -50,3 +51,46 @@ class NewsRecyclerViewAdapter() : PagingDataAdapter<NewsModel,RecyclerView.ViewH
         }
     }
 }
+//
+//class LoadStateViewHolder(
+//    parent: ViewGroup,
+//    retry: () -> Unit
+//) : RecyclerView.ViewHolder(
+//    LayoutInflater.from(parent.context)
+//        .inflate(R.layout.item_recyclerview_load_more_layout, parent, false)
+//) {
+//    private val progressBar: ProgressBar = itemView.findViewById(R.id.progressBar)
+//    private val errorMsg: TextView = itemView.findViewById(R.id.tv_error)
+//    private val retry: Button = itemView.findViewById<Button>(R.id.retry)
+//        .also { it.setOnClickListener { retry.invoke() } }
+//
+//    fun bind(loadState: LoadState) {
+//        if (loadState is LoadState.Error) {
+//            errorMsg.text = loadState.error.localizedMessage
+//        }
+//        progressBar.visibility = toVisibility(loadState is LoadState.Loading)
+//        retry.visibility = toVisibility(loadState !is LoadState.Loading)
+//        errorMsg.visibility = toVisibility(loadState !is LoadState.Loading)
+//    }
+//
+//    private fun toVisibility(constraint: Boolean): Int = if (constraint) {
+//        View.VISIBLE
+//    } else {
+//        View.GONE
+//    }
+//}
+//
+///**
+// * Adapter which displays a loading spinner when `state = LoadState.Loading`, and an error
+// * message and retry button when `state is LoadState.Error`.
+// */
+//class MyLoadStateAdapter(
+//    private val retry: () -> Unit
+//) : LoadStateAdapter<LoadStateViewHolder>() {
+//
+//    override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState) =
+//        LoadStateViewHolder(parent, retry)
+//
+//    override fun onBindViewHolder(holder: LoadStateViewHolder, loadState: LoadState) =
+//        holder.bind(loadState)
+//}

@@ -10,15 +10,18 @@ import java.io.IOException
 
 private const val STARTING_PAGE_INDEX = 1
 
-class NewsPagingSource: PagingSource<Int,NewsModel >() {
+class NewsPagingSource : PagingSource<Int, NewsModel>() {
     override fun getRefreshKey(state: PagingState<Int, NewsModel>): Int? {
-        TODO("Not yet implemented")
+        return state.anchorPosition?.let { anchorPosition ->
+            val anchorPage = state.closestPageToPosition(anchorPosition)
+            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
+        }
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, NewsModel> {
         val position = params.key ?: STARTING_PAGE_INDEX
         return try {
-            val response = RetrofitService.retrofit().getRequest(ApiMethod.news,position)
+            val response = RetrofitService.retrofit().getRequest(ApiMethod.news, position)
             val data = response.body()!!
             LoadResult.Page(
                 data = data,
@@ -28,6 +31,7 @@ class NewsPagingSource: PagingSource<Int,NewsModel >() {
         } catch (exception: IOException) {
             return LoadResult.Error(exception)
         } catch (exception: HttpException) {
+            ApiResult.failure<NewsModel>("Error")
             return LoadResult.Error(exception)
         }
     }

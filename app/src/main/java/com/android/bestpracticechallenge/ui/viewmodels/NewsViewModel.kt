@@ -15,10 +15,7 @@ class NewsViewModel : ViewModel() {
 
     private var downloadingLiveData = MutableLiveData<Boolean>()
 
-    val _downloadLiveData: LiveData<Boolean> = downloadingLiveData
-
     fun fetchNews(): LiveData<PagingData<NewsModel>> {
-        downloadingLiveData.postValue(true)
         return newsRepo.getNews().cachedIn(viewModelScope)
     }
 }

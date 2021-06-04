@@ -1,13 +1,11 @@
 package com.android.bestpracticechallenge.ui
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.liveData
 import com.android.bestpracticechallenge.bean.NewsModel
-import kotlinx.coroutines.flow.Flow
 
 class NewsRepo {
 
