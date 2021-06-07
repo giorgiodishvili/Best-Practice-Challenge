@@ -10,7 +10,7 @@ import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.android.bestpracticechallenge.R
 
-class LoaderStateAdapter() :
+class LoaderStateAdapter :
     LoadStateAdapter<LoaderStateAdapter.LoaderViewHolder>() {
 
     override fun onBindViewHolder(holder: LoaderViewHolder, loadState: LoadState) {
@@ -27,7 +27,6 @@ class LoaderStateAdapter() :
     class LoaderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         companion object {
-            //get instance of the DoggoImageViewHolder
             fun getInstance(parent: ViewGroup): LoaderViewHolder {
                 val inflater = LayoutInflater.from(parent.context)
                 val view =
